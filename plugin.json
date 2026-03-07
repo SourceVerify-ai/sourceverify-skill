@@ -1,0 +1,7 @@
+{
+  "name": "sourceverify",
+  "version": "1.0.0",
+  "description": "Verify academic citations and references using the SourceVerify API",
+  "homepage": "https://sourceverify.ai",
+  "skills": ["skills/sourceverify"]
+}
