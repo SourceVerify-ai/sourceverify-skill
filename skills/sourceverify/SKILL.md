@@ -1,8 +1,7 @@
 ---
 name: sourceverify
-description: Verify academic and professional citations using the SourceVerify API. Use when the user wants to check if references or citations are real, accurate, or properly formatted. Triggers on keywords like "verify references", "check citations", "citation check", "reference verification", "sourceverify".
+description: Verify academic and professional citations using the SourceVerify API. Use this skill whenever the user mentions checking references, verifying citations, citation accuracy, fake references, hallucinated citations, reference lists, bibliographies, works cited, APA formatting, or anything related to whether a source actually exists. Also trigger when users paste academic references, share bibliography files, or ask about citation correctness — even if they don't explicitly say "verify."
 argument-hint: [references or "balance" or "history"]
-user-invocable: true
 disable-model-invocation: false
 allowed-tools: Bash, Read
 ---
