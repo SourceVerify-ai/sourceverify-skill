@@ -4,8 +4,14 @@ Verify academic and professional citations directly from Claude Code using the [
 
 ## Install
 
+1. Clone the repo:
 ```bash
-claude plugin install https://github.com/SourceVerify-ai/sourceverify-skill
+git clone https://github.com/SourceVerify-ai/sourceverify-skill.git
+```
+
+2. Launch Claude Code with the plugin:
+```bash
+claude --plugin-dir /path/to/sourceverify-skill
 ```
 
 ## Setup
