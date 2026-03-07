@@ -1,4 +1,4 @@
-# SourceVerify Skill for Claude Code
+# SourceVerify Skill for Claude Code (Beta)
 
 Verify academic and professional citations directly from Claude Code using the [SourceVerify](https://sourceverify.ai) API.
 
@@ -64,8 +64,8 @@ Or just paste multiple references and ask Claude to verify them — the skill tr
 |--------|---------|
 | **VERIFIED** | Reference confirmed as accurate |
 | **VERIFIED (with errors)** | Reference exists but has minor inaccuracies |
-| **UNVERIFIED** | Could not confirm the reference exists |
 | **NEEDS HUMAN REVIEW** | Ambiguous results requiring manual review |
+| **UNVERIFIED** | Could not confirm the reference exists |
 
 ## Pricing
 
