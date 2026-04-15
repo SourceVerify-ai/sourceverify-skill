@@ -1,0 +1,123 @@
+{
+  "skill_name": "sourceverify",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "verify-real-reference",
+      "prompt": "/sourceverify \"Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention is all you need. Advances in Neural Information Processing Systems, 30.\"",
+      "expected_output": "VERIFIED or VERIFIED WITH ERRORS status, corrected APA7 reference, field-level results, summary",
+      "assertions": [
+        {
+          "id": "e1_calls_api",
+          "name": "Makes a real API call (not answering from training knowledge)",
+          "description": "The output shows evidence of an actual curl call to the SourceVerify API — job IDs, document IDs, or live polling status messages should appear"
+        },
+        {
+          "id": "e1_verified_status",
+          "name": "Returns VERIFIED or VERIFIED WITH ERRORS (not UNVERIFIED)",
+          "description": "Attention is All You Need is a real, well-known paper — the API should confirm it. Result should show VERIFIED or VERIFIED WITH ERRORS, not UNVERIFIED or NEEDS HUMAN REVIEW"
+        },
+        {
+          "id": "e1_corrected_reference",
+          "name": "Shows a corrected/formatted reference",
+          "description": "The output includes an APA7-formatted corrected version of the reference"
+        },
+        {
+          "id": "e1_summary",
+          "name": "Includes a summary section",
+          "description": "The output ends with a summary showing counts (total, verified, unverified, etc.)"
+        },
+        {
+          "id": "e1_no_key_exposed",
+          "name": "API key is not visible in the output",
+          "description": "The API key (sk_...) should not appear anywhere in the displayed response"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "verify-fake-reference",
+      "prompt": "/sourceverify \"Chen, L., & Williams, R. (2021). Deep reinforcement learning for autonomous citation validation. IEEE Transactions on Neural Networks, 34(2), 891-904.\"",
+      "expected_output": "UNVERIFIED or NEEDS HUMAN REVIEW status, explanation of why, no hallucinated confirmation",
+      "assertions": [
+        {
+          "id": "e2_calls_api",
+          "name": "Makes a real API call (not answering from training knowledge)",
+          "description": "The output shows evidence of an actual curl call — job IDs, document IDs, or polling messages"
+        },
+        {
+          "id": "e2_unverified_or_review",
+          "name": "Returns UNVERIFIED or NEEDS HUMAN REVIEW (not VERIFIED)",
+          "description": "This reference appears to be fabricated. The skill should surface that — result should be UNVERIFIED or NEEDS HUMAN REVIEW, not VERIFIED"
+        },
+        {
+          "id": "e2_no_hallucinated_confirmation",
+          "name": "Does not confirm the reference exists from its own knowledge",
+          "description": "The response should not claim the paper exists or describe its contents without API evidence. All claims should come from the API result"
+        },
+        {
+          "id": "e2_shows_explanation",
+          "name": "Includes an explanation of the verdict",
+          "description": "The result includes some explanation of why the reference couldn't be verified (not found, no match, etc.)"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "eval_name": "balance-check",
+      "prompt": "/sourceverify balance",
+      "expected_output": "Token counts (subscription, purchased, total), plan name, no errors",
+      "assertions": [
+        {
+          "id": "e3_calls_balance_api",
+          "name": "Calls the balance API endpoint",
+          "description": "Output shows evidence of a curl call to /api/verify-reference/balance"
+        },
+        {
+          "id": "e3_shows_token_counts",
+          "name": "Shows token counts",
+          "description": "Output includes numeric token values — subscription tokens, purchased tokens, and/or total available"
+        },
+        {
+          "id": "e3_shows_plan",
+          "name": "Shows plan information",
+          "description": "Output includes the user's current plan name"
+        },
+        {
+          "id": "e3_no_key_exposed",
+          "name": "API key is not visible in the output",
+          "description": "The API key (sk_...) should not appear anywhere in the displayed response"
+        }
+      ]
+    }
+  ,
+    {
+      "id": 4,
+      "eval_name": "verify-with-errors",
+      "prompt": "/sourceverify \"Vaswani, A., Shazeer, N., Parker, N., et al. (2017). Attention is all you need. Advances in Neural Information Processing Systems, 30.\"",
+      "expected_output": "VERIFIED WITH ERRORS status, corrected reference showing the real author name, field-level results showing the contradiction",
+      "assertions": [
+        {
+          "id": "e4_calls_api",
+          "name": "Makes a real API call",
+          "description": "Output shows evidence of an actual curl call — job IDs, document IDs, or polling messages"
+        },
+        {
+          "id": "e4_verified_with_error_status",
+          "name": "Returns VERIFIED WITH ERRORS (not plain VERIFIED or UNVERIFIED)",
+          "description": "The reference is real but has a field-level error — status should be VERIFIED WITH ERRORS"
+        },
+        {
+          "id": "e4_shows_corrected_reference",
+          "name": "Shows corrected reference with real author name",
+          "description": "The corrected APA7 reference should include the correct author name (Parmar, not Parker)"
+        },
+        {
+          "id": "e4_shows_field_contradiction",
+          "name": "Shows which fields had errors",
+          "description": "The field results section indicates which field(s) had a CONTRADICTION or MISMATCH"
+        }
+      ]
+    }
+  ]
+}
