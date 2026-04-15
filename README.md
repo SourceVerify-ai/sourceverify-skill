@@ -4,40 +4,36 @@ Verify academic and professional citations directly from Claude Code using the [
 
 ## Install
 
-1. Clone the repo:
-```bash
-git clone https://github.com/SourceVerify-ai/sourceverify-skill.git
-```
+**1. Get an API key**
 
-2. Launch Claude Code with the plugin:
-```bash
-claude --plugin-dir /path/to/sourceverify-skill
-```
-
-## Setup
-
-1. Get an API key at [sourceverify.ai/developers](https://sourceverify.ai/en/developers)
-2. Set it in your shell profile:
+[Sign up](https://sourceverify.ai/signup) and grab your key from [Account → Developer](https://sourceverify.ai/account/developer). Set it in your shell profile:
 
 ```bash
 export SOURCEVERIFY_API_KEY="sk_your_key_here"
 ```
 
+**2. Install the skill**
+
+```bash
+curl -o ~/.claude/commands/sourceverify.md \
+  https://raw.githubusercontent.com/SourceVerify-ai/sourceverify-skill/main/skills/sourceverify/SKILL.md
+```
+
+That's it. Restart Claude Code and `/sourceverify` is available.
+
 ## Usage
 
-### Verify references
+### Verify a reference
 
 ```
-/sourceverify Smith, J. (2020). The Art of Citation. Academic Press.
+/sourceverify "Kuhn, T. S. (1962). The Structure of Scientific Revolutions. University of Chicago Press."
 ```
 
-Or point to a file:
+Or point to a file (one reference per line):
 
 ```
 /sourceverify references.txt
 ```
-
-Or just paste multiple references and ask Claude to verify them — the skill triggers automatically.
 
 ### Check token balance
 
@@ -60,7 +56,7 @@ Or just paste multiple references and ask Claude to verify them — the skill tr
 ## How It Works
 
 1. References are submitted to the SourceVerify API
-2. Each reference is verified against multiple sources (OpenAlex, Google Scholar, direct URL checks)
+2. Each reference is checked against OpenAlex, Google Scholar, and direct URL verification
 3. An AI review agent analyzes the evidence and assigns a status
 4. Results include corrected APA7 formatting and field-level accuracy details
 
@@ -75,10 +71,11 @@ Or just paste multiple references and ask Claude to verify them — the skill tr
 
 ## Pricing
 
-Each reference verification costs 1 token. Get tokens at [sourceverify.ai/pricing](https://sourceverify.ai/en/pricing).
+Each reference verification costs 1 token. Get tokens at [sourceverify.ai/pricing](https://sourceverify.ai/pricing).
 
 ## Links
 
 - [SourceVerify](https://sourceverify.ai)
-- [API Documentation](https://sourceverify.ai/en/developers/docs/api)
-- [Get API Key](https://sourceverify.ai/en/developers)
+- [CLI Tool](https://sourceverify.ai/developers/docs/cli)
+- [API Documentation](https://sourceverify.ai/developers/docs/api)
+- [Get API Key](https://sourceverify.ai/account/developer)
