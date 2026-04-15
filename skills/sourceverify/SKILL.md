@@ -18,7 +18,7 @@ The user must set their API key as an environment variable:
 export SOURCEVERIFY_API_KEY="sk_..."
 ```
 
-If `SOURCEVERIFY_API_KEY` is not set, tell the user to get one at https://sourceverify.ai/en/developers and set it in their shell profile.
+If `SOURCEVERIFY_API_KEY` is not set, tell the user to get one at https://sourceverify.ai/account/developer and set it in their shell profile.
 
 ## Commands
 
@@ -33,7 +33,7 @@ If arguments contain reference text, a file path, or the user asks to verify/che
 If the user provided a file path, read the file and extract the references from it.
 If the user pasted text, parse individual references from it (split by numbered list, newlines between entries, or other clear delimiters).
 
-Limit to 10 references per request. If more than 10, batch them into multiple requests.
+Limit to 20 references per request. If more than 20, batch them into multiple requests of up to 20.
 
 **Step 2 — Submit to API**
 
@@ -47,13 +47,13 @@ curl -s -X POST https://sourceverify.ai/api/verify-reference \
 Parse the JSON response to get `jobIds` and `documentId`.
 
 If the response has an error (401, 402, 403, 429), report it clearly:
-- 401/403: Invalid API key
-- 402: Insufficient tokens — direct user to https://sourceverify.ai/en/pricing
-- 429: Rate limited — wait and retry
+- 401/403: Invalid API key — direct user to https://sourceverify.ai/account/developer
+- 402: Insufficient tokens — direct user to https://sourceverify.ai/pricing
+- 429: Rate limited — wait 30 seconds and retry once
 
 **Step 3 — Poll for results**
 
-Poll every 5 seconds until all jobs are completed or failed:
+Verification typically takes 15–60 seconds per batch. Poll every 8 seconds until all jobs are completed or failed:
 
 ```bash
 curl -s -X POST https://sourceverify.ai/api/verify-reference/results \
@@ -85,20 +85,28 @@ For each completed job, display a formatted report:
 ```
 
 Status should be displayed with clear indicators:
-- `verified` — VERIFIED
-- `verified-with-error` — VERIFIED (with minor errors)
-- `unverified` — UNVERIFIED
-- `needs-human` — NEEDS HUMAN REVIEW
-- `failed` — ERROR
+- `verified` — ✅ VERIFIED
+- `verified-with-error` — ⚠️ VERIFIED (with minor errors)
+- `unverified` — ❌ UNVERIFIED
+- `needs-human` — 🔍 NEEDS HUMAN REVIEW
+- `failed` — ⚠️ ERROR
 
-At the end, show a summary:
+**Step 5 — Show summary and balance**
+
+After displaying all results, check the token balance and show a summary:
+
+```bash
+curl -s -X GET https://sourceverify.ai/api/verify-reference/balance \
+  -H "Authorization: Bearer $SOURCEVERIFY_API_KEY"
+```
+
 ```
 ## Summary
 - Total: X references
-- Verified: X
-- Unverified: X
-- Needs Review: X
-- Tokens remaining: [from balance check]
+- ✅ Verified: X
+- ❌ Unverified: X
+- 🔍 Needs Review: X
+- Tokens remaining: X
 ```
 
 ### 2. Check Balance
@@ -139,7 +147,7 @@ If `$ARGUMENTS` contains "cancel" followed by a document ID or job IDs:
 curl -s -X POST https://sourceverify.ai/api/verify-reference/cancel \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $SOURCEVERIFY_API_KEY" \
-  -d '{"documentId": "..."}'
+  -d '{"jobIds": ["id1", "id2", ...]}'
 ```
 
 Report how many jobs were cancelled and tokens refunded.
@@ -148,7 +156,7 @@ Report how many jobs were cancelled and tokens refunded.
 
 - Always check that `SOURCEVERIFY_API_KEY` is set before making any API call
 - Each reference consumes 1 token
-- Verification typically takes 10-45 seconds per reference
+- Verification typically takes 15–60 seconds per batch — this is normal, keep polling
 - The API returns corrected APA7 formatted references when possible
 - Never expose the API key in output
-- If polling takes more than 3 minutes total, warn the user and ask if they want to continue waiting
+- If polling takes more than 3 minutes total, warn the user and suggest checking `history` later
