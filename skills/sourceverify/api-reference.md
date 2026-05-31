@@ -20,7 +20,7 @@ Submit references for verification.
   "references": ["Reference text 1", "Reference text 2"]
 }
 ```
-- Max 10 references per request
+- Max 20 references per request
 - Max 1,200 characters per reference
 
 **Response (200):**
@@ -162,4 +162,4 @@ Or:
 
 ## Rate Limits
 
-10 requests per minute per IP. Each request can contain up to 10 references.
+10 requests per minute per IP. Each request can contain up to 20 references.
